@@ -4,7 +4,7 @@
 #
 Name     : seqdiag
 Version  : 0.9.5
-Release  : 4
+Release  : 5
 URL      : https://pypi.python.org/packages/source/s/seqdiag/seqdiag-0.9.5.tar.gz
 Source0  : https://pypi.python.org/packages/source/s/seqdiag/seqdiag-0.9.5.tar.gz
 Summary  : seqdiag generates sequence-diagram image from text

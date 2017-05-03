@@ -4,7 +4,7 @@
 #
 Name     : seqdiag
 Version  : 0.9.5
-Release  : 7
+Release  : 8
 URL      : https://pypi.python.org/packages/source/s/seqdiag/seqdiag-0.9.5.tar.gz
 Source0  : https://pypi.python.org/packages/source/s/seqdiag/seqdiag-0.9.5.tar.gz
 Summary  : seqdiag generates sequence-diagram image from text
@@ -12,16 +12,22 @@ Group    : Development/Tools
 License  : Apache-2.0 BSD-3-Clause
 Requires: seqdiag-bin
 Requires: seqdiag-python
+Requires: blockdiag
+Requires: docutils
+Requires: nose
+Requires: pep8
+Requires: reportlab
+Requires: setuptools
 BuildRequires : blockdiag-python
-BuildRequires : nose-python
+BuildRequires : funcparserlib-python
+BuildRequires : olefile
 BuildRequires : pbr
-BuildRequires : pep8
 BuildRequires : pip
 BuildRequires : pluggy
 BuildRequires : py-python
 BuildRequires : pytest
 BuildRequires : python-dev
-BuildRequires : reportlab-python
+BuildRequires : python3-dev
 BuildRequires : setuptools
 BuildRequires : tox
 BuildRequires : virtualenv
@@ -43,10 +49,6 @@ bin components for the seqdiag package.
 %package python
 Summary: python components for the seqdiag package.
 Group: Default
-Requires: blockdiag-python
-Requires: nose-python
-Requires: pep8
-Requires: reportlab-python
 
 %description python
 python components for the seqdiag package.
@@ -56,16 +58,27 @@ python components for the seqdiag package.
 %setup -q -n seqdiag-0.9.5
 
 %build
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+export LANG=C
+export SOURCE_DATE_EPOCH=1493808501
 python2 setup.py build -b py2
+python3 setup.py build -b py3
 
 %check
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-python2 setup.py test
+PYTHONPATH=%{buildroot}/usr/lib/python3.6/site-packages python3 setup.py test || :
 %install
+export SOURCE_DATE_EPOCH=1493808501
 rm -rf %{buildroot}
-python2 -tt setup.py build -b py2 install --root=%{buildroot}
+python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
+python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
+echo ----[ mark ]----
+cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
+echo ----[ mark ]----
 
 %files
 %defattr(-,root,root,-)
@@ -76,4 +89,5 @@ python2 -tt setup.py build -b py2 install --root=%{buildroot}
 
 %files python
 %defattr(-,root,root,-)
-/usr/lib/python*/*
+/usr/lib/python2*/*
+/usr/lib/python3*/*

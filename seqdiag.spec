@@ -4,7 +4,7 @@
 #
 Name     : seqdiag
 Version  : 0.9.6
-Release  : 15
+Release  : 16
 URL      : https://files.pythonhosted.org/packages/b3/b5/aa0c9513df1898ecb4c3930d53e594b2298b3d5a535898f78c65cc0f45e1/seqdiag-0.9.6.tar.gz
 Source0  : https://files.pythonhosted.org/packages/b3/b5/aa0c9513df1898ecb4c3930d53e594b2298b3d5a535898f78c65cc0f45e1/seqdiag-0.9.6.tar.gz
 Summary  : seqdiag generates sequence-diagram image from text
@@ -16,8 +16,12 @@ Requires: seqdiag-python = %{version}-%{release}
 Requires: seqdiag-python3 = %{version}-%{release}
 Requires: blockdiag
 Requires: docutils
+BuildRequires : blockdiag
 BuildRequires : buildreq-distutils3
+BuildRequires : docutils
+BuildRequires : nose-python
 BuildRequires : olefile
+BuildRequires : pep8
 BuildRequires : pluggy
 BuildRequires : py-python
 BuildRequires : pytest
@@ -67,13 +71,19 @@ python3 components for the seqdiag package.
 
 %prep
 %setup -q -n seqdiag-0.9.6
+cd %{_builddir}/seqdiag-0.9.6
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1545509292
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1576015555
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
@@ -81,13 +91,14 @@ python3 setup.py build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-PYTHONPATH=%{buildroot}/usr/lib/python3.7/site-packages python3 setup.py test || :
+PYTHONPATH=%{buildroot}$(python -c "import sys; print(sys.path[-1])") python setup.py test || :
 %install
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/seqdiag
-cp LICENSE %{buildroot}/usr/share/package-licenses/seqdiag/LICENSE
-cp src/seqdiag/tests/VLGothic/LICENSE %{buildroot}/usr/share/package-licenses/seqdiag/src_seqdiag_tests_VLGothic_LICENSE
-cp src/seqdiag/tests/VLGothic/LICENSE.en %{buildroot}/usr/share/package-licenses/seqdiag/src_seqdiag_tests_VLGothic_LICENSE.en
+cp %{_builddir}/seqdiag-0.9.6/LICENSE %{buildroot}/usr/share/package-licenses/seqdiag/2b8b815229aa8a61e483fb4ba0588b8b6c491890
+cp %{_builddir}/seqdiag-0.9.6/src/seqdiag/tests/VLGothic/LICENSE %{buildroot}/usr/share/package-licenses/seqdiag/af07a3a5218239724d3c4ad4f9e4746835129293
+cp %{_builddir}/seqdiag-0.9.6/src/seqdiag/tests/VLGothic/LICENSE.en %{buildroot}/usr/share/package-licenses/seqdiag/25d28628ff8ea8da700469e7b9ce06e5faecfed0
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
@@ -102,9 +113,9 @@ echo ----[ mark ]----
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/seqdiag/LICENSE
-/usr/share/package-licenses/seqdiag/src_seqdiag_tests_VLGothic_LICENSE
-/usr/share/package-licenses/seqdiag/src_seqdiag_tests_VLGothic_LICENSE.en
+/usr/share/package-licenses/seqdiag/25d28628ff8ea8da700469e7b9ce06e5faecfed0
+/usr/share/package-licenses/seqdiag/2b8b815229aa8a61e483fb4ba0588b8b6c491890
+/usr/share/package-licenses/seqdiag/af07a3a5218239724d3c4ad4f9e4746835129293
 
 %files python
 %defattr(-,root,root,-)

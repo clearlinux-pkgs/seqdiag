@@ -4,10 +4,10 @@
 #
 Name     : seqdiag
 Version  : 2.0.0
-Release  : 21
+Release  : 22
 URL      : https://files.pythonhosted.org/packages/35/cf/1e1fa65111f90747e9c9f2438674b5c77dbb00a0b14a01ba280c7c34bad9/seqdiag-2.0.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/35/cf/1e1fa65111f90747e9c9f2438674b5c77dbb00a0b14a01ba280c7c34bad9/seqdiag-2.0.0.tar.gz
-Summary  : seqdiag generates sequence-diagram images from .diag files
+Summary  : seqdiag generates sequence-diagram image from text
 Group    : Development/Tools
 License  : Apache-2.0 BSD-3-Clause
 Requires: seqdiag-bin = %{version}-%{release}
@@ -27,94 +27,9 @@ BuildRequires : virtualenv
 
 %description
 `seqdiag` generate sequence-diagram image file from spec-text file.
-
 .. image:: https://drone.io/bitbucket.org/blockdiag/seqdiag/status.png
-   :target: https://drone.io/bitbucket.org/blockdiag/seqdiag
-   :alt: drone.io CI build status
-
-.. image:: https://pypip.in/v/seqdiag/badge.png
-   :target: https://pypi.python.org/pypi/seqdiag/
-   :alt: Latest PyPI version
-
-.. image:: https://pypip.in/d/seqdiag/badge.png
-   :target: https://pypi.python.org/pypi/seqdiag/
-   :alt: Number of PyPI downloads
-
-
-Features
-========
-
-* Generate sequence-diagram from dot like text (basic feature).
-* Multilingualization for node-label (utf-8 only).
-
-You can get some examples and generated images on 
-`blockdiag.com`_ .
-
-Setup
-=====
-
-Use easy_install or pip::
-
-   $ sudo easy_install seqdiag
-
-   Or
-
-   $ sudo pip seqdiag
-
-
-Copy and modify ini file. example::
-
-   $ cp <seqdiag installed path>/blockdiag/examples/simple.diag .
-   $ vi simple.diag
-
-Please refer to `spec-text setting sample`_ section for the format of the
-`simpla.diag` configuration file.
-
-spec-text setting sample
-========================
-
-Few examples are available.
-You can get more examples at
-`blockdiag.com <http://blockdiag.com/seqdiag/build/html/index.html>`_ .
-
-simple.diag
-------------
-
-simple.diag is simply define nodes and transitions by dot-like text format::
-
-    diagram {
-      browser  -> webserver [label = "GET /index.html"];
-      browser <-- webserver;
-      browser  -> webserver [label = "POST /blog/comment"];
-                  webserver  -> database [label = "INSERT comment"];
-                  webserver <-- database;
-      browser <-- webserver;
-    }
-
-
-Usage
-=====
-
-Execute seqdiag command::
-
-   $ seqdiag simple.diag
-   $ ls simple.png
-   simple.png
-
-
-Requirements
-============
-* Python 3.5 or later
-* blockdiag 1.5.0 or later
-* funcparserlib 0.3.6 or later
-* reportlab (optional)
-* wand and imagemagick (optional)
-* setuptools
-
-
-License
-=======
-Apache License 2.0
+:target: https://drone.io/bitbucket.org/blockdiag/seqdiag
+:alt: drone.io CI build status
 
 %package bin
 Summary: bin components for the seqdiag package.
@@ -147,6 +62,7 @@ Summary: python3 components for the seqdiag package.
 Group: Default
 Requires: python3-core
 Provides: pypi(seqdiag)
+Requires: pypi(blockdiag)
 
 %description python3
 python3 components for the seqdiag package.
@@ -161,12 +77,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1582923359
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1603404095
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
